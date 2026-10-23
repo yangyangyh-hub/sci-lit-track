@@ -1,0 +1,102 @@
+{
+  "_说明": "把这里换成你关注的领域。每个方向 = 一组主题，组内 OR、组间 AND。复制本文件为 directions.json 后修改。",
+  "profile_name": "示例：我的研究方向",
+  "days": 28,
+  "window_days": 28,
+  "recent_days": 14,
+  "window2_days": 28,
+  "max_candidates": 40,
+  "quota_per_direction": 10,
+  "top_n": 10,
+  "mailto": "you@example.com",
+  "sources": {
+    "europepmc": true,
+    "openalex": true,
+    "arxiv": false,
+    "pubmed": true
+  },
+  "paths": {
+    "_说明": "有分区表就填，没有就留空；留空时 gate 请用 journal_list 或 none",
+    "zone_xlsx": "",
+    "if_xlsx": "",
+    "reported_index": ""
+  },
+  "gate_default": {
+    "mode": "zone_if",
+    "zone_allow": [
+      "1 区",
+      "2 区"
+    ],
+    "if_min": 4.0,
+    "_mode说明": "zone_if=分区或IF；journal_list=只收指定期刊；none=不设期刊门槛"
+  },
+  "topics_mode": "每个 direction 下 topics 组内 OR、组间 AND",
+  "directions": [
+    {
+      "id": "1",
+      "name": "方向一（示例：微生物组与宿主互作）",
+      "query": "(\"gut microbiota\" OR \"gut microbiome\" OR \"16S rRNA\" OR metagenomic)",
+      "core": [
+        "gut microbiota",
+        "gut microbiome",
+        "16s rrna",
+        "metagenomic",
+        "dysbiosis",
+        "short-chain fatty acid",
+        "intestinal barrier"
+      ],
+      "require_any": [
+        "microbiota",
+        "microbiome"
+      ],
+      "exclude_terms": "",
+      "exclude_journal": "",
+      "zone_cat_allow": [],
+      "zone_cat_strict": false
+    },
+    {
+      "id": "2",
+      "name": "方向二（示例：营养与代谢）",
+      "query": "(\"dietary supplementation\" OR \"feed additive\" OR \"nutrient digestibility\" OR \"amino acid\")",
+      "core": [
+        "dietary supplementation",
+        "feed additive",
+        "nutrient digestibility",
+        "amino acid",
+        "metabolizable energy",
+        "growth performance"
+      ],
+      "require_any": [],
+      "exclude_terms": "",
+      "exclude_journal": "",
+      "zone_cat_allow": [],
+      "zone_cat_strict": false
+    }
+  ],
+  "exclude_publishers": {
+    "_说明": "最高优先级硬排除；按需删改。默认示例给了三类出版方，若你的领域需要可以整段删掉。",
+    "publishers": [],
+    "journals": [],
+    "journal_prefixes": [],
+    "known_titles": []
+  },
+  "content_preference": {
+    "_说明": "排序用的内容倾向：机制/方法类加分、纯临床/纯综述类减分。不需要就留空数组。",
+    "prefer": [
+      "mechanism",
+      "pathway",
+      "knockout",
+      "transcript",
+      "signaling",
+      "in vitro"
+    ],
+    "clinical": [
+      "patients",
+      "clinical trial",
+      "meta-analysis",
+      "cohort"
+    ]
+  },
+  "min_abstract_chars": 0,
+  "_min_abstract_chars说明": "摘要最小字符数；0=不限（有些期刊摘要本身很短）"
+}
