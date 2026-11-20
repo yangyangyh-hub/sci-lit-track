@@ -46,7 +46,7 @@ python scripts/funnel.py run --config config/directions.json --out runs/2026-10-
 # 4) DOI 核验（必做）
 LIT_MAILTO=you@example.com python scripts/verify_doi.py --run runs/2026-10-23
 
-# 5) 撰写内容（每篇中文译题 + 四段概述），格式见 references/内容撰写指南.md
+# 5) 撰写内容（每篇中文译题 + 摘要整段中译），格式见 references/内容撰写指南.md
 #    产物：content/d1.json … dN.json
 
 # 6) 生成报告
@@ -98,7 +98,7 @@ python tests/test_species.py    # 对象（物种）判定
 - 单源单方向有结果上限（PubMed 300 / Europe PMC 200 / OpenAlex 100 / Crossref 100），顶格时存在召回损失
 - OpenAlex 的 `created_date` 过滤不可靠，降级用 `publication_date` 并在记录上标注
 - 部分网络环境 PubMed 需代理；脚本按域名自动路由，代理不可用时回退直连
-- 报告四段概述依据摘要生成，摘要未写明的信息标注「摘要未提供」，不做推测
+- 报告正文是**原文摘要的整段中文译文**（`abstract_cn`），按原序逐句译，不做归纳改写、不引申
 
 ## License
 

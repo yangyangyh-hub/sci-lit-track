@@ -3,7 +3,7 @@ name: sci-lit-track
 description: "可配置的 SCI 文献追踪与进展报告：为**任意研究方向**（由用户给出方向与检索词）从 PubMed、Europe PMC、OpenAlex、Crossref 抓取近 2–4 周正式发表论文，按期刊门槛、主题相关性、内容倾向排序，每方向取约 10 篇，输出「精选导读 + 各方向」结构的中文进展报告。触发词：文献追踪、SCI 文献、文献进展、文献周报、本周文献、追踪文献、找最近的文章、跑一期文献、literature radar、weekly literature。"
 description_zh: "可配置方向的 SCI 文献追踪 → 筛选排序 → 中文进展报告"
 description_en: "Configurable multi-source literature radar → Chinese progress report"
-version: 2.0.0
+version: 2.1.0
 agent_created: true
 ---
 
@@ -73,8 +73,9 @@ $PY "$SK/scripts/funnel.py" run --config <项目>/config/directions.json --out <
 # ③ DOI 核验（★ 必做，不核验不许进报告）
 LIT_MAILTO=you@example.com $PY "$SK/scripts/verify_doi.py" --run <运行目录>
 
-# ④ 撰写内容：每篇写中文译题 + 四段（格式见 references/内容撰写指南.md）
-#    产物：<项目>/content/d1.json … dN.json
+# ④ 撰写内容：每篇写中文译题 + 摘要整段中译（格式见 references/内容撰写指南.md）
+#    产物：<项目>/content/d1.json … dN.json（字段：doi / title_cn / abstract_cn）
+#    摘要原文取 result.json 的 final.<方向>.picked[i].abstract，逐句译，不拆四段
 
 # ⑤ 生成报告
 $PY "$SK/scripts/build_report.py" --run <运行目录> --content <项目>/content
@@ -83,7 +84,7 @@ $PY "$SK/scripts/build_report.py" --run <运行目录> --content <项目>/conten
 # ⑥ 交付：present_files 展示报告 + 一句话说明本期覆盖与不足
 ```
 
-**耗时参考**：② 3–8 分钟（可后台）；③ 约 1 分钟；④ 最慢，50 篇需逐篇读摘要撰写。
+**耗时参考**：② 3–8 分钟（可后台）；③ 约 1 分钟；④ 最慢，50 篇需逐篇读摘要翻译。
 
 ---
 
@@ -97,16 +98,18 @@ $PY "$SK/scripts/build_report.py" --run <运行目录> --content <项目>/conten
 | 必排 | 预印本、社论/评论/勘误/撤稿、非目标对象（按方向配置）。**摘要长度不设门槛**（`min_abstract_chars` 默认 0） |
 | 排序 | 相关性 → 内容倾向（机制/方法 +1、纯临床/综述 −1）→ 分区档位 → 用户优先项 → 日期 |
 | 单归属 | 同一 DOI 只归一个方向（取相关性最高） |
-| 报告版式 | `# <日期> 文献进展` → `一、精选导读` → `二~N` 各方向 |
+| 报告版式 | `# <日期> 文献进展` → `一、精选导读` → `二~N` 各方向；每篇 = 中文译题 + 英文原题 + 元数据 + 链接 + **摘要整段中译** |
 
 ---
 
 ## 4. 内容撰写硬规则
 
-1. **标题用中文译题**；正文**首条**是**英文原题全文**，再跟元数据、链接、四段。
-2. 四段（背景/方法/主要结果/结论）各 1–3 句，**只依据正式摘要**。
-3. 摘要没写的写「**摘要未提供**」，**禁止推测、禁止替作者补意义**。
-4. 数字、样本量、基因/菌种名照原文；术语首次出现用「中文（英文）」。
+1. **标题用中文译题**；正文**首条**是**英文原题全文**，再跟元数据、链接，**末尾是摘要整段中译**。
+2. **每篇只写摘要中文译文一段**（`abstract_cn`），**不再拆背景/方法/主要结果/结论四段**；
+   原文怎么排就怎么译，不重排、不压缩成要点。
+3. 只依据正式摘要：摘要没写的不补，摘要截断的回 `result.json` 取全文。
+   确实无摘要的写「**原刊未提供摘要**」，**禁止推测、禁止替作者补意义**。
+4. 数字、样本量、基因/菌种名照原文；术语首次出现用「中文（英文）」；保留全部限定语（`仅在…中`、`不影响…`）。
 5. **每篇必须有直达链接**（doi.org → PubMed → PMC → Europe PMC）。
 6. 不写"具有重要意义""提供了新思路"式空话。
 
@@ -143,7 +146,7 @@ sci-lit-track/
 │   └── build_report.py   # result.json + content/*.json → 报告
 ├── references/
 │   ├── 口径说明.md        # 完整口径（唯一权威，改动须升版本）
-│   └── 内容撰写指南.md    # 四段写法 + content JSON 格式 + 常见错误
+│   └── 内容撰写指南.md    # 摘要中译写法 + content JSON 格式 + 常见错误
 ├── assets/content_template.json
 └── tests/                # 黑名单 / 物种判定回归（改规则就跑）
 ```

@@ -748,7 +748,7 @@ def render(funnel, final, cfg, D0, D1, cross) -> str:
             L.append(f"| {i} | {r.get('rel')} | {tag} | {r.get('title_cn') or '（待填）'} | {r.get('journal') or '—'} | "
                      f"{r.get('zone') or '—'} | {r.get('impact') or '—'} | {r.get('date_online') or '—'} | "
                      f"{'/'.join(r.get('species') or [])} | `{r.get('doi') or '—'}` |")
-        L += ["", "<!-- 每篇待补：英文原题、四段概述（背景/方法/主要结果/结论） -->", ""]
+        L += ["", "<!-- 每篇待补：英文原题 + 摘要整段中译（写进 content/*.json 的 abstract_cn） -->", ""]
     L += ["---", f"_漏斗由 `scripts/funnel.py` 生成；排序口径：相关性→1区且IF>8→1区→IF>4→猪优先→日期_"]
     return "\n".join(L)
 
